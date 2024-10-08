@@ -39,17 +39,33 @@ const fourLetterWords: string[] = [
   "fish",
   "lamp",
 ];
-const fiveLetterWords: string[] = [
-  "house",
-  "bird",
-  "apple",
-  "truck",
-  "chair",
-  "plant",
-  "glass",
-  "train",
-  "water",
-  "river",
+const alphabets: string[] = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
 ];
 
 interface WordStatus {
@@ -71,7 +87,7 @@ const SpellingBeeGame: React.FC = () => {
   const [timer, setTimer] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
 
-  const levels = [threeLetterWords, fourLetterWords, fiveLetterWords];
+  const levels = [alphabets, threeLetterWords, fourLetterWords];
 
   useEffect(() => {
     initializeWordStatus();
