@@ -80,7 +80,10 @@ const SpellingBeeGame: React.FC = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
   const [userInput, setUserInput] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [score, setScore] = useState<number>(0);
+  const [score, setScore] = useState<number>(() => {
+    const savedScore = localStorage.getItem("score");
+    return savedScore ? parseInt(savedScore, 10) : 0;
+  });
   const [showHint, setShowHint] = useState<boolean>(false);
   const [studyList, setStudyList] = useState<string[]>([]);
   const [showStudyList, setShowStudyList] = useState<boolean>(false);
@@ -106,6 +109,10 @@ const SpellingBeeGame: React.FC = () => {
       if (interval) clearInterval(interval);
     };
   }, [isActive, timer]);
+
+  useEffect(() => {
+    localStorage.setItem("score", score.toString());
+  }, [score]);
 
   const initializeWordStatus = () => {
     const initialStatus = levels.map((level) =>
@@ -157,11 +164,9 @@ const SpellingBeeGame: React.FC = () => {
     const currentLevelWords = wordStatus[currentLevel];
     let nextIndex = (currentWordIndex + 1) % currentLevelWords.length;
 
-    // Check if all words in the current level are correct
     const allCorrect = currentLevelWords.every((word) => word.correct);
 
     if (allCorrect) {
-      // Move to the next level if available
       if (currentLevel + 1 < levels.length) {
         setCurrentLevel((prevLevel) => prevLevel + 1);
         setCurrentWordIndex(0);
@@ -173,7 +178,6 @@ const SpellingBeeGame: React.FC = () => {
         setIsActive(false);
       }
     } else {
-      // Find the next unattempted or incorrect word
       while (
         nextIndex !== currentWordIndex &&
         currentLevelWords[nextIndex].correct
@@ -252,6 +256,11 @@ const SpellingBeeGame: React.FC = () => {
               <span className="font-semibold">{currentDate}</span>
             </CardContent>
           </Card>
+          <Card className="w-auto">
+            <CardContent className="flex items-center p-2">
+              <span className="font-semibold">Score: {score}</span>
+            </CardContent>
+          </Card>
         </div>
 
         <h1 className="text-5xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
@@ -267,7 +276,12 @@ const SpellingBeeGame: React.FC = () => {
             Score: {correctWords} / {totalWords}
           </p>
           <p className="text-center text-lg font-semibold text-purple-700">
-            Level: {currentLevel + 1} ({currentLevel + 3}-letter words)
+            Level:{" "}
+            {currentLevel === 0
+              ? "1 letter word"
+              : currentLevel === 1
+              ? "3 letter word"
+              : "4 letter word"}
           </p>
         </div>
 
